@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id              String            @id
+  description     String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  productInstance ProductInstance[]
+  productOrder    ProductOrder[]
+}
+
+model ProductInstance {
+  id        String   @id @default(uuid())
+  quantity  Int
+  FIFO      DateTime @default(now())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  events    Event[]
+}
+
+model ProductOrder {
+  id        String  @id
+  quantity  Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+}
+
+model Order {
+  id        String         @id
+  orderDate DateTime
+  products  ProductOrder[]
+}
+
+model Event {
+  id                String          @id
+  type              EventType
+  eventDate         DateTime        @default(now())
+  productInstanceId String
+  productInstance   ProductInstance @relation(fields: [productInstanceId], references: [id])
+  deposit           Deposit         @relation(fields: [depositId], references: [id])
+  depositId         String
+}
+
+model Deposit {
+  id           String   @id
+  name         String
+  maxQuantity  Int
+  storageZones String[]
+  event        Event[]
+}
+
+enum EventType {
+  DEPOSIT
+  TRANSPORTATION
+  DESTINATION
+}
