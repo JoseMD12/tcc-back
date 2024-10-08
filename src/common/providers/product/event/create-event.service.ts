@@ -22,7 +22,7 @@ export class CreateEventService {
     const deposit = await this.database.deposit.findFirst({
       where: {
         storageZones: {
-          has: payload.storageZone,
+          has: payload.actualStorageZone,
         },
       },
     });
@@ -31,20 +31,36 @@ export class CreateEventService {
       throw new Error('Deposit not found');
     }
 
+    const productId = payload.tagId.split('-')[0];
+    const tagId = payload.tagId.split('-')[1];
+
     const event = await this.database.event.findMany({
       where: {
         productInstance: {
-          productId: payload.productId,
+          productId,
         },
       },
     });
 
     const productInstance = await this.database.productInstance.findFirst({
       where: {
-        productId: payload.productId,
-        AND: {
-          events: {},
-        },
+        productId,
+        id: tagId,
+      },
+    });
+
+    if (!productInstance) {
+      throw new Error('Product instance not found');
+    }
+
+    const eventCount = event.length;
+
+    await this.database.event.create({
+      data: {
+        id: `${eventCount + 1}`,
+        type: deposit.type,
+        depositId: deposit.id,
+        productInstanceId: productInstance.id,
       },
     });
   }

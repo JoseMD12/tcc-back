@@ -17,7 +17,7 @@ model Product {
 }
 
 model ProductInstance {
-  id        String   @id @default(uuid())
+  id        String   @id
   quantity  Int
   FIFO      DateTime @default(now())
   productId String
@@ -51,14 +51,16 @@ model Event {
 }
 
 model Deposit {
-  id           String   @id
+  id           String    @id
   name         String
+  type         EventType
   maxQuantity  Int
   storageZones String[]
   event        Event[]
 }
 
 enum EventType {
+  REGISTRATION
   DEPOSIT
   TRANSPORTATION
   DESTINATION

@@ -27,17 +27,22 @@ export class CreateProductInstanceService {
       throw new Error('Deposit not found');
     }
 
+    const productInstanceCount = await this.database.productInstance.count({
+      where: { productId: payload.productId },
+    });
+
     const productInstance = await this.database.productInstance.create({
       include: {
         events: true,
       },
       data: {
+        id: `${productInstanceCount + 1}`,
         quantity: payload.quantity,
         productId: payload.productId,
         events: {
           create: {
             id: '1',
-            type: 'IN',
+            type: 'REGISTRATION',
             depositId: deposit.id,
           },
         },
