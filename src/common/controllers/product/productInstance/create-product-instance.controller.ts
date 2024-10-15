@@ -1,16 +1,18 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { CreateProductInstanceModel } from '../../../model/product/productInstance/create-product-instance.model';
+import { CreateProductInstanceService } from '../../../providers/product/productInstance/create-product-instance.service';
 
 @Controller('/product-instance')
 export class CreateProductInstanceController {
   constructor(
-    private readonly createProductInstanceUseCase: CreateProductInstanceUseCase,
+    private readonly createProductInstanceService: CreateProductInstanceService,
   ) {}
 
   @Post()
   async createProductInstance(
-    @Body() createProductInstanceRequest: CreateProductInstanceRequest,
-  ): Promise<CreateProductInstanceResponse> {
-    return await this.createProductInstanceUseCase.execute(
+    @Body() createProductInstanceRequest: CreateProductInstanceModel,
+  ) {
+    return await this.createProductInstanceService.execute(
       createProductInstanceRequest,
     );
   }
