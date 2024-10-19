@@ -9,7 +9,7 @@ export class CreateManyProductsController {
   ) {}
 
   @Post('/create-many')
-  async createManyProducts(@Body() products: Product[]): Promise<number> {
-    return this.createManyProductsService.execute(products);
+  async createManyProducts(@Body() payload: Product[]): Promise<number> {
+    return this.createManyProductsService.execute(payload);
   }
 }

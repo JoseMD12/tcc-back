@@ -8,7 +8,7 @@ export class DeleteManyProductsController {
   ) {}
 
   @Delete('/delete-many')
-  async deleteManyProducts(@Body() products: string[]): Promise<number> {
-    return this.deleteManyProductsService.execute(products);
+  async deleteManyProducts(@Body() payload: string[]): Promise<number> {
+    return this.deleteManyProductsService.execute(payload);
   }
 }
