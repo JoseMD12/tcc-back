@@ -9,11 +9,7 @@ export class CreateProductInstanceController {
   ) {}
 
   @Post()
-  async createProductInstance(
-    @Body() createProductInstanceRequest: CreateProductInstanceModel,
-  ) {
-    return await this.createProductInstanceService.execute(
-      createProductInstanceRequest,
-    );
+  async createProductInstance(@Body() payload: CreateProductInstanceModel) {
+    return await this.createProductInstanceService.execute(payload);
   }
 }
