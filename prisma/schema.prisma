@@ -11,7 +11,6 @@ model Product {
   id              String            @id
   description     String
   createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
   productInstance ProductInstance[]
   productOrder    ProductOrder[]
 }
@@ -51,7 +50,7 @@ model Event {
 }
 
 model Deposit {
-  id           String    @id
+  id           String    @id @default(uuid())
   name         String
   type         EventType
   maxQuantity  Int

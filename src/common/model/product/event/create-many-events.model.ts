@@ -1,5 +1,5 @@
-export class CreateEventModel {
-  tagId: string;
+export class CreateManyEventsModel {
   previousStorageZone: string;
   actualStorageZone: string;
+  tagList: string[];
 }
