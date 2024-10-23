@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../database/database.service';
-import { CreateProductInstanceModel } from '../../../model/product/productInstance/create-product-instance.model';
+import { CreateProductInstanceModel } from '../../../model/product/product-instance/create-product-instance.model';
 
 @Injectable()
 export class CreateProductInstanceService {
   constructor(private readonly database: PrismaService) {}
 
-  async createProductInstance(payload: CreateProductInstanceModel) {
+  async execute(payload: CreateProductInstanceModel) {
     const product = await this.database.product.findUnique({
       where: { id: payload.productId },
     });
@@ -27,16 +27,12 @@ export class CreateProductInstanceService {
       throw new Error('Deposit not found');
     }
 
-    const productInstanceCount = await this.database.productInstance.count({
-      where: { productId: payload.productId },
-    });
-
     const productInstance = await this.database.productInstance.create({
       include: {
         events: true,
       },
       data: {
-        id: `${productInstanceCount + 1}`,
+        id: payload.id,
         quantity: payload.quantity,
         productId: payload.productId,
         events: {
