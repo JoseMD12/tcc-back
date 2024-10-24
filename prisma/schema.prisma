@@ -50,12 +50,11 @@ model Event {
 }
 
 model Deposit {
-  id           String    @id @default(uuid())
-  name         String
-  type         EventType
-  maxQuantity  Int
-  storageZones String[]
-  event        Event[]
+  id          String    @id @default(uuid())
+  name        String
+  type        EventType
+  maxQuantity Int
+  event       Event[]
 }
 
 enum EventType {

@@ -15,7 +15,7 @@ export class ExportProductInstanceService {
           orderBy: {
             eventDate: 'desc',
           },
-          take: 1,
+          take: 2,
         },
       },
     });

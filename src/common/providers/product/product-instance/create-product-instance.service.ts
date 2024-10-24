@@ -17,9 +17,7 @@ export class CreateProductInstanceService {
 
     const deposit = await this.database.deposit.findFirst({
       where: {
-        storageZones: {
-          has: payload.initialStorageZone,
-        },
+        id: payload.depositId,
       },
     });
 
@@ -27,7 +25,7 @@ export class CreateProductInstanceService {
       throw new Error('Deposit not found');
     }
 
-    const productInstance = await this.database.productInstance.create({
+    await this.database.productInstance.create({
       include: {
         events: true,
       },

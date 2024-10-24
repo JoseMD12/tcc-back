@@ -1,6 +1,6 @@
 export class CreateProductInstanceModel {
   id: string;
   productId: string;
-  initialStorageZone: string;
+  depositId: string;
   quantity: number;
 }

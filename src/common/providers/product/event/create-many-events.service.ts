@@ -9,9 +9,7 @@ export class CreateManyEventsService {
   async execute(payload: CreateManyEventsModel) {
     const previousDeposit = await this.database.deposit.findFirst({
       where: {
-        storageZones: {
-          has: payload.previousStorageZone,
-        },
+        id: payload.previousDepositId,
       },
     });
 
@@ -21,9 +19,7 @@ export class CreateManyEventsService {
 
     const deposit = await this.database.deposit.findFirst({
       where: {
-        storageZones: {
-          has: payload.actualStorageZone,
-        },
+        id: payload.actualDepositId,
       },
     });
 

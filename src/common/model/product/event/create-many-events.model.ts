@@ -1,5 +1,5 @@
 export class CreateManyEventsModel {
-  previousStorageZone: string;
-  actualStorageZone: string;
+  previousDepositId: string;
+  actualDepositId: string;
   tagList: string[];
 }
