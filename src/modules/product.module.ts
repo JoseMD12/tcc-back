@@ -6,6 +6,8 @@ import { DeleteManyProductsController } from '../common/controllers/product/dele
 import { ListProductsController } from '../common/controllers/product/list-products.controller';
 import { DeleteManyProductsService } from '../common/providers/product/delete-many-products.service';
 import { ListProductsService } from '../common/providers/product/list-products.service';
+import { ExportProductsController } from '../common/controllers/product/export-products.controller';
+import { ExportProductsService } from '../common/providers/product/export-products.service';
 
 @Module({
   imports: [PrismaModule],
@@ -13,11 +15,13 @@ import { ListProductsService } from '../common/providers/product/list-products.s
     CreateManyProductsController,
     DeleteManyProductsController,
     ListProductsController,
+    ExportProductsController,
   ],
   providers: [
     CreateManyProductsService,
     DeleteManyProductsService,
     ListProductsService,
+    ExportProductsService,
   ],
   exports: [],
 })
