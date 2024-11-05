@@ -25,7 +25,7 @@ model ProductInstance {
 }
 
 model ProductOrder {
-  id        String  @id
+  id        String  @id @default(uuid())
   quantity  Int
   product   Product @relation(fields: [productId], references: [id])
   productId String
@@ -34,7 +34,7 @@ model ProductOrder {
 }
 
 model Order {
-  id        String         @id
+  id        String         @id @default(uuid())
   orderDate DateTime
   products  ProductOrder[]
 }

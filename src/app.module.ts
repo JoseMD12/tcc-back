@@ -6,6 +6,7 @@ import { ProductInstanceModule } from './modules/product-instance.module';
 import { EventModule } from './modules/event.module';
 import { ChartsModule } from './modules/charts.module';
 import { InfoCardsModule } from './modules/info-cards.module';
+import { OrderModule } from './modules/order.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { InfoCardsModule } from './modules/info-cards.module';
     ProductInstanceModule,
     PrismaModule,
     EventModule,
+    OrderModule,
     ChartsModule,
     InfoCardsModule,
   ],
