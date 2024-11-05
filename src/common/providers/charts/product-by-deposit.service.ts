@@ -4,13 +4,21 @@ import { PrismaService } from '../../database/database.service';
 @Injectable()
 export class ProductByDepositService {
   constructor(private readonly database: PrismaService) {}
-  async execute(): Promise<{ name: string; totalAmount: number }[]> {
-    const productInstances = await this.database.productInstance.findMany({
+  async execute(
+    productId?: string,
+  ): Promise<{ name: string; totalAmount: number }[]> {
+    let productInstances = await this.database.productInstance.findMany({
       include: {
         product: true,
         events: true,
       },
     });
+
+    if (productId) {
+      productInstances = productInstances.filter(
+        (productInstance) => productInstance.productId === productId,
+      );
+    }
 
     const deposits = await this.database.deposit.findMany();
     const productQuantityByDeposit: {

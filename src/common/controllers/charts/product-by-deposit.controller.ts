@@ -1,14 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Param } from '@nestjs/common';
 import { ProductByDepositService } from '../../providers/charts/product-by-deposit.service';
 
-@Controller('product-by-deposit')
+@Controller('/product-by-deposit')
 export class ProductByDepositController {
   constructor(
     private readonly productByDepositService: ProductByDepositService,
   ) {}
 
-  @Get()
-  async getProductByDeposit() {
-    return this.productByDepositService.execute();
+  @Get(':productId?')
+  async getProductByDeposit(@Param('productId') productId?: string) {
+    return this.productByDepositService.execute(productId);
   }
 }
