@@ -7,6 +7,12 @@ export class CreateManyProductsService {
   constructor(private readonly database: PrismaService) {}
 
   async execute(payload: ProductModel[]): Promise<number> {
+    const ids = payload.map((product) => product.id);
+
+    if (ids.length !== new Set(ids).size) {
+      throw new Error('Há identificadores duplicados');
+    }
+
     const invalidProductsId = (
       await this.database.product.findMany({
         where: {
