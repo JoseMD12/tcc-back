@@ -16,20 +16,20 @@ model Product {
 }
 
 model ProductInstance {
-  id        String   @id
+  id        Int      @id @default(autoincrement())
   quantity  Int
   FIFO      DateTime @default(now())
   productId String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   events    Event[]
 }
 
 model ProductOrder {
   id        String  @id @default(uuid())
   quantity  Int
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
-  order     Order   @relation(fields: [orderId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId   String
 }
 
@@ -40,12 +40,12 @@ model Order {
 }
 
 model Event {
-  id                String          @id
+  id                String          @id @default(uuid())
   type              EventType
   eventDate         DateTime        @default(now())
-  productInstanceId String
-  productInstance   ProductInstance @relation(fields: [productInstanceId], references: [id])
-  deposit           Deposit         @relation(fields: [depositId], references: [id])
+  productInstanceId Int
+  productInstance   ProductInstance @relation(fields: [productInstanceId], references: [id], onDelete: Cascade)
+  deposit           Deposit         @relation(fields: [depositId], references: [id], onDelete: Cascade)
   depositId         String
 }
 

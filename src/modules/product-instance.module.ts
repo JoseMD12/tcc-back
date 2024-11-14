@@ -6,6 +6,8 @@ import { ListProductInstanceService } from '../common/providers/product/product-
 import { CreateProductInstanceService } from '../common/providers/product/product-instance/create-product-instance.service';
 import { ExportProductInstanceController } from '../common/controllers/product/product-instance/export-product-instance.controller';
 import { ExportProductInstanceService } from '../common/providers/product/product-instance/export-product-instance.service';
+import { FindProductInstanceByIdController } from '../common/controllers/product/product-instance/find-product-instance-by-id.controller';
+import { FindProductInstanceByIdService } from '../common/providers/product/product-instance/find-product-instance-by-id.service';
 
 @Module({
   imports: [PrismaModule],
@@ -13,11 +15,13 @@ import { ExportProductInstanceService } from '../common/providers/product/produc
     CreateProductInstanceController,
     ListProductInstanceController,
     ExportProductInstanceController,
+    FindProductInstanceByIdController,
   ],
   providers: [
     CreateProductInstanceService,
     ListProductInstanceService,
     ExportProductInstanceService,
+    FindProductInstanceByIdService,
   ],
   exports: [],
 })

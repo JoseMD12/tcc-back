@@ -30,12 +30,10 @@ export class CreateProductInstanceService {
         events: true,
       },
       data: {
-        id: payload.id,
         quantity: payload.quantity,
         productId: payload.productId,
         events: {
           create: {
-            id: '1',
             type: 'REGISTRATION',
             depositId: deposit.id,
           },

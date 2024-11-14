@@ -28,8 +28,11 @@ export class CreateManyEventsService {
     }
 
     payload.tagList.forEach(async (tag) => {
-      const productId = tag.split('-')[0];
-      const tagId = tag.split('-')[1];
+      const tagId = tag.split('-')[0];
+      const productId = tag.split('-')[1];
+
+      console.log('productId', productId);
+      console.log('tagId', tagId);
 
       const event = await this.database.event.findMany({
         where: {
@@ -42,7 +45,7 @@ export class CreateManyEventsService {
       const productInstance = await this.database.productInstance.findFirst({
         where: {
           productId,
-          id: tagId,
+          id: Number(tagId),
         },
       });
 
