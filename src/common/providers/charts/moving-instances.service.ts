@@ -17,12 +17,21 @@ export class MovingInstancesService {
       throw new Error('Tipo de Movimentação inválido');
     }
 
-    const productInstances = await this.database.productInstance.findMany({
+    let productInstances = await this.database.productInstance.findMany({
       include: {
         product: true,
         events: true,
       },
     });
+
+    if (search) {
+      productInstances = productInstances.filter((productInstance) => {
+        return (
+          productInstance.product.description.includes(search) ||
+          productInstance.product.id.includes(search)
+        );
+      });
+    }
 
     const deposit = await this.database.deposit.findFirst({
       where: { id: depositId },

@@ -8,7 +8,7 @@ export class DeleteManyDepositsService {
   async execute(payload: string[]): Promise<number> {
     const deposits = await this.database.deposit.deleteMany({
       where: {
-        name: {
+        id: {
           in: payload,
         },
       },

@@ -4,11 +4,21 @@ import { ProductByDepositController } from '../common/controllers/charts/product
 import { ProductByDepositService } from '../common/providers/charts/product-by-deposit.service';
 import { MovingInstancesController } from '../common/controllers/charts/moving-instances.controller';
 import { MovingInstancesService } from '../common/providers/charts/moving-instances.service';
+import { DepositOccupationController } from '../common/controllers/charts/deposit-occupation.controller';
+import { DepositOccupationService } from '../common/providers/charts/deposit-occupation.service';
 
 @Module({
   imports: [PrismaModule],
-  controllers: [ProductByDepositController, MovingInstancesController],
-  providers: [ProductByDepositService, MovingInstancesService],
+  controllers: [
+    ProductByDepositController,
+    MovingInstancesController,
+    DepositOccupationController,
+  ],
+  providers: [
+    ProductByDepositService,
+    MovingInstancesService,
+    DepositOccupationService,
+  ],
   exports: [],
 })
 export class ChartsModule {}

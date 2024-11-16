@@ -23,7 +23,11 @@ export class CreateManyDepositsService {
     }
 
     const deposits = await this.database.deposit.createMany({
-      data: payload,
+      data: payload.map((deposit) => ({
+        name: deposit.name,
+        type: deposit.type,
+        maxQuantity: Number(deposit.maxQuantity),
+      })),
     });
 
     return deposits.count;

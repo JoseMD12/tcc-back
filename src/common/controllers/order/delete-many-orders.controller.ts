@@ -1,4 +1,4 @@
-import { Controller, Delete } from '@nestjs/common';
+import { Body, Controller, Delete } from '@nestjs/common';
 import { DeleteManyOrdersService } from '../../providers/order/delete-many-orders.service';
 
 @Controller('/order')
@@ -7,8 +7,8 @@ export class DeleteManyOrdersController {
     private readonly deleteManyOrdersService: DeleteManyOrdersService,
   ) {}
 
-  @Delete()
-  async deleteManyOrders(payload: string[]) {
+  @Delete('/delete-many')
+  async deleteManyOrders(@Body() payload: string[]) {
     return this.deleteManyOrdersService.execute(payload);
   }
 }

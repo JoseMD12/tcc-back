@@ -6,15 +6,23 @@ import { ListOrderController } from '../common/controllers/order/list-order.cont
 import { ListOrderService } from '../common/providers/order/list-order.service';
 import { DeleteManyOrdersController } from '../common/controllers/order/delete-many-orders.controller';
 import { DeleteManyOrdersService } from '../common/providers/order/delete-many-orders.service';
+import { ExportOrderController } from '../common/controllers/order/export-order.controller';
+import { ExportOrderService } from '../common/providers/order/export-order.service';
 
 @Module({
   imports: [PrismaModule],
   controllers: [
     CreateOrderController,
+    ExportOrderController,
     ListOrderController,
     DeleteManyOrdersController,
   ],
-  providers: [CreateOrderService, ListOrderService, DeleteManyOrdersService],
+  providers: [
+    CreateOrderService,
+    ExportOrderService,
+    ListOrderService,
+    DeleteManyOrdersService,
+  ],
   exports: [],
 })
 export class OrderModule {}

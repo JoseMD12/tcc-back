@@ -16,18 +16,27 @@ export class ProductByDepositService {
 
     if (productId) {
       productInstances = productInstances.filter(
-        (productInstance) => productInstance.productId === productId,
+        (productInstance) =>
+          productInstance.productId.includes(productId) ||
+          productInstance.product.description.includes(productId),
       );
     }
 
     const deposits = await this.database.deposit.findMany();
     const productQuantityByDeposit: {
-      [key: string]: { name: string; totalAmount: number };
+      [key: string]: {
+        name: string;
+        maxQuantity: number;
+        percentOfUsage: number;
+        totalAmount: number;
+      };
     } = {};
 
     deposits.forEach((deposit) => {
       productQuantityByDeposit[deposit.id] = {
         name: deposit.name,
+        maxQuantity: deposit.maxQuantity,
+        percentOfUsage: 0,
         totalAmount: 0,
       };
     });
@@ -49,6 +58,11 @@ export class ProductByDepositService {
         productQuantityByDeposit[depositId].totalAmount +=
           productInstance.quantity;
       });
+
+    Object.values(productQuantityByDeposit).forEach((deposit) => {
+      deposit.percentOfUsage =
+        (deposit.totalAmount / deposit.maxQuantity) * 100;
+    });
 
     return Object.values(productQuantityByDeposit);
   }
