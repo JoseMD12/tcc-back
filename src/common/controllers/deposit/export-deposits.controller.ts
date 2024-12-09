@@ -2,11 +2,11 @@ import { Controller, Get, Res } from '@nestjs/common';
 import { ExportDepositsService } from '../../providers/deposit/export-deposits.service';
 import { Response } from 'express';
 
-@Controller('/deposit')
+@Controller('/excel/deposit')
 export class ExportDepositsController {
   constructor(private readonly service: ExportDepositsService) {}
 
-  @Get('/excel')
+  @Get()
   async exportDeposits(@Res() res: Response) {
     const buffer = await this.service.exportDeposits();
 

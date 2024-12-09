@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/database.service';
 import { MovimentationType } from '../../model/deposit/movimentation-type';
 import { EventType } from '@prisma/client';
+import { RemoveDuplicates } from '../../utils/remove-duplicates.service';
 
 @Injectable()
 export class MovingInstancesService {
-  constructor(private readonly database: PrismaService) {}
+  constructor(
+    private readonly database: PrismaService,
+    private readonly removeDuplicates: RemoveDuplicates,
+  ) {}
   async execute(
     movingType: MovimentationType,
     depositId?: string,
@@ -33,6 +37,15 @@ export class MovingInstancesService {
       });
     }
 
+    if (!depositId) {
+      productInstances = productInstances.map((productInstance) => {
+        productInstance.events = this.removeDuplicates.events(
+          productInstance.events,
+        );
+        return productInstance;
+      });
+    }
+
     const deposit = await this.database.deposit.findFirst({
       where: { id: depositId },
     });
@@ -42,7 +55,19 @@ export class MovingInstancesService {
     }
 
     const productQuantityByMonth: {
-      [key: string]: { name: string; monthNumber: number; totalAmount: number };
+      [key: string]: {
+        name: string;
+        monthNumber: number;
+        totalAmount: number;
+        products: {
+          deposit: string;
+          productId: string;
+          productDescription: string;
+          quantity: number;
+          tagId: string;
+          eventDate: Date;
+        }[];
+      };
     } = {};
 
     for (let i = 0; i < 12; i++) {
@@ -52,6 +77,7 @@ export class MovingInstancesService {
       });
 
       let totalAmount = 0;
+      let products = [];
 
       productInstances.forEach((productInstance) => {
         switch (movingType) {
@@ -73,6 +99,15 @@ export class MovingInstancesService {
               lastEvent.type === EventType.TRANSPORTATION
             ) {
               totalAmount += productInstance.quantity;
+              products.push({
+                deposit: lastEvent.depositId,
+                productId: productInstance.productId,
+                productDescription: productInstance.product.description,
+                quantity: productInstance.quantity,
+                tagId: `${productInstance.id}-${productInstance.productId}`,
+                eventDate: lastEvent.eventDate,
+                type: movingType,
+              });
             }
             break;
 
@@ -91,6 +126,17 @@ export class MovingInstancesService {
 
             if (validInEvent.length) {
               totalAmount += productInstance.quantity;
+              products.push(
+                ...validInEvent.map((event) => ({
+                  deposit: event.depositId,
+                  productId: productInstance.productId,
+                  productDescription: productInstance.product.description,
+                  quantity: productInstance.quantity,
+                  tagId: `${productInstance.id}-${productInstance.productId}`,
+                  eventDate: event.eventDate,
+                  type: movingType,
+                })),
+              );
             }
             break;
 
@@ -105,6 +151,17 @@ export class MovingInstancesService {
 
               if (validOutEvent.length) {
                 totalAmount += productInstance.quantity;
+                products.push(
+                  ...validOutEvent.map((event) => ({
+                    deposit: event.depositId,
+                    productId: productInstance.productId,
+                    productDescription: productInstance.product.description,
+                    quantity: productInstance.quantity,
+                    tagId: `${productInstance.id}-${productInstance.productId}`,
+                    eventDate: event.eventDate,
+                    type: movingType,
+                  })),
+                );
               }
 
               break;
@@ -129,6 +186,15 @@ export class MovingInstancesService {
 
             if (nextEvent.eventDate.getMonth() === i) {
               totalAmount += productInstance.quantity;
+              products.push({
+                deposit: depositEvent.depositId,
+                productId: productInstance.productId,
+                productDescription: productInstance.product.description,
+                quantity: productInstance.quantity,
+                tagId: `${productInstance.id}-${productInstance.productId}`,
+                eventDate: nextEvent.eventDate,
+                type: movingType,
+              });
             }
 
             break;
@@ -141,6 +207,7 @@ export class MovingInstancesService {
         name: monthName,
         monthNumber: i,
         totalAmount,
+        products,
       };
     }
 

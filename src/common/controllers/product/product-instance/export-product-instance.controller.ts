@@ -2,13 +2,13 @@ import { Controller, Get, Res } from '@nestjs/common';
 import { ExportProductInstanceService } from '../../../providers/product/product-instance/export-product-instance.service';
 import { Response } from 'express';
 
-@Controller('/product-instance')
+@Controller('/excel/product-instance')
 export class ExportProductInstanceController {
   constructor(
     private readonly exportProductInstanceService: ExportProductInstanceService,
   ) {}
 
-  @Get('/excel')
+  @Get()
   async exportProductInstance(@Res() res: Response) {
     const buffer = await this.exportProductInstanceService.execute();
 

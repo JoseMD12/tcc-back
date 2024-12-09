@@ -1,5 +1,5 @@
 export class CreateManyEventsModel {
-  previousDepositId: string;
+  // previousDepositId: string;
   actualDepositId: string;
   tagList: string[];
 }

@@ -7,6 +7,7 @@ import { EventModule } from './modules/event.module';
 import { ChartsModule } from './modules/charts.module';
 import { InfoCardsModule } from './modules/info-cards.module';
 import { OrderModule } from './modules/order.module';
+import { ReadTagInfoController } from './common/controllers/rfid/read-tag-info.controller';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { OrderModule } from './modules/order.module';
     ChartsModule,
     InfoCardsModule,
   ],
-  controllers: [],
+  controllers: [ReadTagInfoController],
   providers: [],
 })
 export class AppModule {}

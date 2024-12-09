@@ -7,15 +7,15 @@ export class CreateManyEventsService {
   constructor(private readonly database: PrismaService) {}
 
   async execute(payload: CreateManyEventsModel) {
-    const previousDeposit = await this.database.deposit.findFirst({
-      where: {
-        id: payload.previousDepositId,
-      },
-    });
+    // const previousDeposit = await this.database.deposit.findFirst({
+    //   where: {
+    //     id: payload.previousDepositId,
+    //   },
+    // });
 
-    if (!previousDeposit) {
-      throw new Error('Previous deposit not found');
-    }
+    // if (!previousDeposit) {
+    //   throw new Error('Previous deposit not found');
+    // }
 
     const deposit = await this.database.deposit.findFirst({
       where: {

@@ -23,19 +23,23 @@ export class DepositOccupationService {
 
     let totalAmount = 0;
 
-    productInstances.forEach((productInstance) => {
-      const sortedEvents = productInstance.events.sort((a, b) => {
-        return (
-          new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime()
-        );
+    productInstances
+      .filter((productInstance) => {
+        return productInstance.events.length > 0;
+      })
+      .forEach((productInstance) => {
+        const sortedEvents = productInstance.events.sort((a, b) => {
+          return (
+            new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime()
+          );
+        });
+
+        const lastEvent = sortedEvents[0];
+
+        if (lastEvent.depositId === depositId) {
+          totalAmount += productInstance.quantity;
+        }
       });
-
-      const lastEvent = sortedEvents[0];
-
-      if (lastEvent.depositId === depositId) {
-        totalAmount += productInstance.quantity;
-      }
-    });
 
     const response = {
       name: deposit.name,

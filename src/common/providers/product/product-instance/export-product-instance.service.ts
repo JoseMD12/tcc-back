@@ -62,20 +62,28 @@ export class ExportProductInstanceService {
       cell.alignment = { vertical: 'middle', horizontal: 'center' };
     });
 
-    productInstances.forEach((productInstance) => {
-      worksheet.addRow({
-        id: productInstance.id,
-        product: productInstance.product.id,
-        quantity: productInstance.quantity,
-        fifo: DateTime.fromJSDate(productInstance.FIFO)
-          .setZone('America/Sao_Paulo')
-          .toFormat('dd/MM/yyyy'),
-        deposit: depositsById[productInstance.events[0].depositId],
-        lastEventDate: DateTime.fromJSDate(productInstance.events[0].eventDate)
-          .setZone('America/Sao_Paulo')
-          .toFormat('dd/MM/yyyy'),
+    productInstances
+      .sort((productInstance) => {
+        return productInstance.events[0]?.eventDate
+          ? new Date(productInstance.events[0].eventDate).getTime()
+          : Number.MIN_SAFE_INTEGER;
+      })
+      .forEach((productInstance) => {
+        worksheet.addRow({
+          id: productInstance.id,
+          product: productInstance.product.id,
+          quantity: productInstance.quantity,
+          fifo: DateTime.fromJSDate(productInstance.FIFO)
+            .setZone('America/Sao_Paulo')
+            .toFormat('dd/MM/yyyy'),
+          deposit: depositsById[productInstance.events[0]?.depositId] ?? 'N/A',
+          lastEventDate: productInstance.events[0]?.eventDate
+            ? DateTime.fromJSDate(productInstance.events[0].eventDate)
+                .setZone('America/Sao_Paulo')
+                .toFormat('dd/MM/yyyy')
+            : 'N/A',
+        });
       });
-    });
 
     const buffer = await workbook.xlsx.writeBuffer();
     return buffer;

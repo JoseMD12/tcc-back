@@ -25,6 +25,13 @@ export class CreateProductInstanceService {
       throw new Error('Deposit not found');
     }
 
+    let eventDate = new Date();
+
+    if (payload.eventDate) {
+      const [day, month, year] = payload.eventDate?.split('/');
+      eventDate = new Date(`${year}-${month}-${day}`);
+    }
+
     await this.database.productInstance.create({
       include: {
         events: true,
@@ -32,10 +39,12 @@ export class CreateProductInstanceService {
       data: {
         quantity: payload.quantity,
         productId: payload.productId,
+        FIFO: eventDate,
         events: {
           create: {
-            type: 'REGISTRATION',
+            type: deposit.type,
             depositId: deposit.id,
+            eventDate,
           },
         },
       },

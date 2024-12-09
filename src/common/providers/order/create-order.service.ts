@@ -11,7 +11,7 @@ export class CreateOrderService {
   async execute(data: OrderModel) {
     const products = await this.database.product.findMany({
       where: {
-        id: {
+        description: {
           in: data.products.map((product) => product.productId),
         },
       },
@@ -23,7 +23,7 @@ export class CreateOrderService {
 
     const orderDate = luxon.DateTime.fromFormat(
       data.orderDate,
-      'dd/MM/yyyy',
+      'yyyy-MM-dd',
     ).toJSDate();
 
     const order = await this.database.order.create({
@@ -33,7 +33,9 @@ export class CreateOrderService {
           createMany: {
             data: data.products.map((product) => ({
               quantity: product.quantity,
-              productId: product.productId,
+              productId: products.find(
+                (p) => p.description === product.productId,
+              ).id,
             })),
           },
         },
