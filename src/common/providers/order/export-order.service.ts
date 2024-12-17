@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/database.service';
 import * as ExcelJS from 'exceljs';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class ExportOrderService {
@@ -22,7 +23,7 @@ export class ExportOrderService {
       .map((order) => {
         return order.products.map((product) => {
           return {
-            date: order.orderDate.toLocaleDateString('pt-BR'),
+            date: DateTime.fromJSDate(order.orderDate).toFormat('dd/MM/yyyy'),
             code: product.productId,
             name: productsById[product.productId].description,
             quantity: product.quantity,

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/database.service';
-import * as luxon from 'luxon';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class TotalOrdersService {
@@ -9,11 +9,14 @@ export class TotalOrdersService {
   async getTotalOrders() {
     const orders = await this.database.order.findMany();
 
-    const tomorrow = luxon.DateTime.now().plus({ days: 1 }).toJSDate();
+    const tomorrow = DateTime.now().plus({ days: 1 }).startOf('day');
 
-    const tomorrowOrders = orders.filter(
-      (order) => order.orderDate === tomorrow,
-    );
+    const tomorrowOrders = orders.filter((order) => {
+      {
+        const orderDate = DateTime.fromJSDate(order.orderDate).startOf('day');
+        return tomorrow.hasSame(orderDate, 'day');
+      }
+    });
 
     return {
       total: orders.length,

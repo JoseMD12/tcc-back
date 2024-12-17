@@ -30,7 +30,7 @@ export class DepositOccupationService {
       .forEach((productInstance) => {
         const sortedEvents = productInstance.events.sort((a, b) => {
           return (
-            new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime()
+            b.eventDate.getTime() - a.eventDate.getTime()
           );
         });
 

@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/database.service';
 import { MovimentationType } from '../../model/deposit/movimentation-type';
 import { EventType } from '@prisma/client';
 import { RemoveDuplicates } from '../../utils/remove-duplicates.service';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class MovingInstancesService {
@@ -65,16 +66,14 @@ export class MovingInstancesService {
           productDescription: string;
           quantity: number;
           tagId: string;
-          eventDate: Date;
+          eventDate: DateTime;
         }[];
       };
     } = {};
 
     for (let i = 0; i < 12; i++) {
       const month = i.toString().padStart(2, '0');
-      const monthName = new Date(0, i).toLocaleString('pt-BR', {
-        month: 'long',
-      });
+      const monthName = DateTime.fromJSDate(new Date(0, i)).monthLong;
 
       let totalAmount = 0;
       let products = [];
@@ -105,7 +104,7 @@ export class MovingInstancesService {
                 productDescription: productInstance.product.description,
                 quantity: productInstance.quantity,
                 tagId: `${productInstance.id}-${productInstance.productId}`,
-                eventDate: lastEvent.eventDate,
+                eventDate: DateTime.fromJSDate(lastEvent.eventDate),
                 type: movingType,
               });
             }
@@ -133,7 +132,7 @@ export class MovingInstancesService {
                   productDescription: productInstance.product.description,
                   quantity: productInstance.quantity,
                   tagId: `${productInstance.id}-${productInstance.productId}`,
-                  eventDate: event.eventDate,
+                  eventDate: DateTime.fromJSDate(event.eventDate),
                   type: movingType,
                 })),
               );
@@ -158,7 +157,7 @@ export class MovingInstancesService {
                     productDescription: productInstance.product.description,
                     quantity: productInstance.quantity,
                     tagId: `${productInstance.id}-${productInstance.productId}`,
-                    eventDate: event.eventDate,
+                    eventDate: DateTime.fromJSDate(event.eventDate),
                     type: movingType,
                   })),
                 );
@@ -192,7 +191,7 @@ export class MovingInstancesService {
                 productDescription: productInstance.product.description,
                 quantity: productInstance.quantity,
                 tagId: `${productInstance.id}-${productInstance.productId}`,
-                eventDate: nextEvent.eventDate,
+                eventDate: DateTime.fromJSDate(nextEvent.eventDate),
                 type: movingType,
               });
             }

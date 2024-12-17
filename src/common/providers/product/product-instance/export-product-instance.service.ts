@@ -65,7 +65,7 @@ export class ExportProductInstanceService {
     productInstances
       .sort((productInstance) => {
         return productInstance.events[0]?.eventDate
-          ? new Date(productInstance.events[0].eventDate).getTime()
+          ? productInstance.events[0].eventDate.getTime()
           : Number.MIN_SAFE_INTEGER;
       })
       .forEach((productInstance) => {

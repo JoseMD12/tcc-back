@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/database.service';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class StockProjectionService {
@@ -59,7 +60,7 @@ export class StockProjectionService {
 
     const onlyNew = newOrdersState.toString() === 'true' ? true : false;
     if (onlyNew) {
-      const today = new Date();
+      const today = DateTime.now().setZone('America/Sao_Paulo').startOf('day');
 
       // productInstances = productInstances
       //   .map((productInstance) => {
@@ -76,8 +77,13 @@ export class StockProjectionService {
       //   });
 
       orders = orders.filter((order) => {
-        return order.orderDate >= today;
+        const orderDate = DateTime.fromJSDate(order.orderDate).startOf('day');
+        return orderDate >= today || today.hasSame(orderDate, 'day');
       });
+    }
+
+    if (orders.length === 0) {
+      return [];
     }
 
     const products = await this.database.product.findMany();
@@ -92,12 +98,11 @@ export class StockProjectionService {
     const orderAndStockPerDay: {
       [key: string]: { order: number; stock: number };
     } = orders
-      .sort(
-        (a, b) =>
-          new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime(),
-      )
+      .sort((a, b) => a.orderDate.getTime() - b.orderDate.getTime())
       .reduce((acc, order) => {
-        const orderDate = new Date(order.orderDate).toLocaleDateString('pt-BR');
+        const orderDate = DateTime.fromJSDate(order.orderDate).toFormat(
+          'dd/MM/yyyy',
+        );
         if (!acc[orderDate]) {
           acc[orderDate] = {
             order: 0,
@@ -120,20 +125,23 @@ export class StockProjectionService {
     productInstances.forEach((productInstance) => {
       const ordersDays = Object.keys(orderAndStockPerDay).map((day) => {
         const [dayNumber, month, year] = day.split('/');
-        return new Date(+year, +month - 1, +dayNumber);
+        return DateTime.fromFormat(
+          `${dayNumber}/${month}/${year}`,
+          'dd/MM/yyyy',
+        );
       });
 
       const nearestOrderDay = ordersDays.reduce((acc, day) => {
         if (
-          Math.abs(day.getTime() - productInstance.FIFO.getTime()) <=
-          Math.abs(acc.getTime() - productInstance.FIFO.getTime())
+          Math.abs(day.toMillis() - productInstance.FIFO.getTime()) <=
+          Math.abs(acc.toMillis() - productInstance.FIFO.getTime())
         ) {
           return day;
         }
         return acc;
       }, ordersDays[0]);
 
-      const nearestOrderDayString = nearestOrderDay.toLocaleDateString('pt-BR');
+      const nearestOrderDayString = nearestOrderDay.toFormat('dd/MM/yyyy');
       orderAndStockPerDay[nearestOrderDayString].stock +=
         productInstance.quantity;
     });

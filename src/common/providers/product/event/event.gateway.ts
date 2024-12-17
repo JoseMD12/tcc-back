@@ -16,14 +16,17 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   handleConnection(client: any) {
-    console.log('Client connected:', client.id);
+    console.log('Cliente conectado:', client.id);
+    console.log();
   }
 
   handleDisconnect(client: any) {
-    console.log('Client disconnected:', client.id);
+    console.log('Cliente disconectado:', client.id);
+    console.log();
   }
 
   sendEventUpdate(message: string) {
+    console.log('Enviando Sinal!');
     this.server.emit('event-update', message);
   }
 }

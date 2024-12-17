@@ -21,7 +21,7 @@ export class FindProductInstanceByIdService {
     }
 
     const lastEvent = productInstance.events.sort((a, b) => {
-      return new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime();
+      return b.eventDate.getTime() - a.eventDate.getTime();
     })[0];
 
     const deposit = await this.database.deposit.findUnique({

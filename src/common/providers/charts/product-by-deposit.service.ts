@@ -51,9 +51,7 @@ export class ProductByDepositService {
       })
       .forEach((productInstance) => {
         const depositId = productInstance.events.sort((a, b) => {
-          return (
-            new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime()
-          );
+          return b.eventDate.getTime() - a.eventDate.getTime();
         })[0].depositId;
         productQuantityByDeposit[depositId].totalAmount +=
           productInstance.quantity;

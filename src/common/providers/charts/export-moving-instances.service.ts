@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/database.service';
 import * as ExcelJS from 'exceljs';
 import { MovingInstancesService } from './moving-instances.service';
 import { MovimentationType } from '../../model/deposit/movimentation-type';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class ExportMovingInstancesService {
@@ -81,7 +82,7 @@ export class ExportMovingInstancesService {
           productDescription: item.productDescription,
           quantity: item.quantity,
           tagId: item.tagId,
-          date: item.eventDate.toLocaleDateString('pt-BR'),
+          date: item.eventDate.toFormat('dd/MM/yyyy'),
         });
       });
 

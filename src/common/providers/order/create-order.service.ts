@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/database.service';
 import { OrderModel } from '../../model/order/order.model';
-import * as luxon from 'luxon';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class CreateOrderService {
@@ -21,7 +21,7 @@ export class CreateOrderService {
       throw new Error('Algum produto não foi encontrado');
     }
 
-    const orderDate = luxon.DateTime.fromFormat(
+    const orderDate = DateTime.fromFormat(
       data.orderDate,
       'yyyy-MM-dd',
     ).toJSDate();

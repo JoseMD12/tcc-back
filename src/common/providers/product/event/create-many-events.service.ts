@@ -21,12 +21,6 @@ export class CreateManyEventsService {
     //   throw new Error('Previous deposit not found');
     // }
 
-    console.log('payload', payload);
-
-    // this.eventsGateway.sendEventUpdate('0');
-
-    // return;
-
     const deposit = await this.database.deposit.findFirst({
       where: {
         id: payload.actualDepositId,
@@ -53,14 +47,15 @@ export class CreateManyEventsService {
 
       const eventAlreadyExists =
         event.sort((a, b) => {
-          return (
-            new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime()
-          );
+          return b.eventDate.getTime() - a.eventDate.getTime();
         })[0].depositId === deposit.id;
 
-      console.log('eventAlreadyExists', eventAlreadyExists);
-
       if (eventAlreadyExists) return;
+
+      console.log('----------------------------');
+      console.log('tagId', tagId);
+      console.log('----------------------------');
+      console.log();
 
       const productInstance = await this.database.productInstance.findFirst({
         where: {
@@ -72,8 +67,6 @@ export class CreateManyEventsService {
       if (!productInstance) {
         throw new Error('Product instance not found');
       }
-
-      const eventCount = event.length;
 
       await this.database.event.create({
         data: {
