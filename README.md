@@ -7,6 +7,7 @@ API for **rfid-tracking**, a prototype for inventory management and product trac
 
 | Repository | Role |
 | --- | --- |
+| [rfid-tracking](https://github.com/JoseMD12/rfid-tracking) | Parent repository: project overview, architecture and how to run everything |
 | **tcc-back** (this one) | REST API + WebSocket, business rules and persistence |
 | [tcc-front](https://github.com/JoseMD12/tcc-front) | Web dashboard (React) |
 | [ESP32-ReadTag](https://github.com/JoseMD12/ESP32-ReadTag) | RFID reader firmware (ESP32 + MFRC522) |
@@ -93,6 +94,8 @@ Payload sent by the ESP32 on every read:
 ## Running locally
 
 Requirements: Node.js 18+, Yarn and a reachable PostgreSQL instance.
+
+> To run the whole project at once, use the [rfid-tracking](https://github.com/JoseMD12/rfid-tracking) parent repository, which includes a `docker-compose.yml` with PostgreSQL and a `.env.example`.
 
 ```bash
 # 1. Dependencies
